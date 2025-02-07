@@ -18,7 +18,7 @@ public class Emily {
             } else if (input.equalsIgnoreCase("list")) {
                 printTasks();
             } else if (input.startsWith("mark ")) {
-                markTaskAsDone(Integer.parseInt(input.substring(5)));
+                markTask(Integer.parseInt(input.substring(5)));
             } else if (input.startsWith("unmark ")) {
                 unmarkTask(Integer.parseInt(input.substring(7)));
             } else {
@@ -41,7 +41,7 @@ public class Emily {
         }
     }
 
-    public static void markTaskAsDone(int taskNumber) {
+    public static void markTask(int taskNumber) {
         if (taskNumber > 0 && taskNumber <= tasks.size()) {
             Task task = tasks.get(taskNumber - 1);
             task.markAsDone();
