@@ -6,33 +6,68 @@ public class Emily {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Hello! I'm Emily.");
-        System.out.println("What can I do for you?");
+        greetUser();
 
         while(true) {
             String input = sc.nextLine();
 
-            if (input.equalsIgnoreCase("bye")) {
-                System.out.println("Bye. Hope to see you again soon!");
-                break;
-            } else if (input.equalsIgnoreCase("list")) {
-                printTasks();
-            } else if (input.startsWith("mark ")) {
-                markTask(Integer.parseInt(input.substring(5)));
-            } else if (input.startsWith("unmark ")) {
-                unmarkTask(Integer.parseInt(input.substring(7)));
-            } else if (input.startsWith("todo ")) {
-                addTask(new Todo(input.substring(5)));
-            } else if (input.startsWith("deadline ")) {
-                String[] parts = input.substring(9).split(" by ");
-                addTask(new Deadline(parts[0], parts[1]));
-            } else if (input.startsWith("event ")) {
-                String[] parts = input.substring(6).split(" from | to ");
-                addTask(new Event(parts[0], parts[1], parts[2]));
-            } else {
-                System.out.println("Sorry, I am not sure what that means.");
+            String[] parts = input.split(" ",2);
+            String command = parts[0].toLowerCase();
+            String arguments = parts.length > 1 ? parts[1] : "";
+
+            switch (command) {
+                case "bye":
+                    exitProgram();
+                    return;
+
+                case "list":
+                    printTasks();
+                    break;
+
+                case "mark":
+                    markTask(Integer.parseInt(arguments));
+                    break;
+
+                case "unmark":
+                    unmarkTask(Integer.parseInt(arguments));
+                    break;
+
+                case "todo":
+                    addTask(new Todo(arguments));
+                    break;
+
+                case "deadline":
+                    parts = arguments.split(" by ", 2);
+                    if (parts.length == 2) {
+                        addTask(new Deadline(parts[0], parts[1]));
+                    } else {
+                        System.out.println("Invalid deadline format. Use: deadline <task> by <time>");
+                    }
+                    break;
+
+                case "event":
+                    parts = arguments.split(" from | to ", 2);
+                    if (parts.length == 3) {
+                        addTask(new Event(parts[0], parts[1], parts[2]));
+                    } else {
+                        System.out.println("Invalid event format. Use: event <task> from <time> to <time>");
+                    }
+                    break;
+
+                default:
+                    System.out.println("Sorry, I am not sure what that means. Please start with either <todo>, <deadline> or <event>");
+                    break;
             }
         }
+    }
+
+    public static void greetUser() {
+        System.out.println("Hello! I'm Emily.");
+        System.out.println("What can I do for you?");
+    }
+
+    public static void exitProgram() {
+        System.out.println("Bye. Hope to see you again soon!");
     }
 
     public static void addTask(Task task) {
@@ -43,6 +78,10 @@ public class Emily {
     }
 
     public static void printTasks() {
+        if (tasks.isEmpty()) {
+            System.out.println("Your tasks list is empty!");
+            return;
+        }
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + "." + tasks.get(i));
