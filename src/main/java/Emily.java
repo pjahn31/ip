@@ -33,25 +33,15 @@ public class Emily {
                     break;
 
                 case "todo":
-                    addTask(new Todo(arguments));
+                    addTodo(arguments);
                     break;
 
                 case "deadline":
-                    parts = arguments.split(" by ", 2);
-                    if (parts.length == 2) {
-                        addTask(new Deadline(parts[0], parts[1]));
-                    } else {
-                        System.out.println("Invalid deadline format. Use: deadline <task> by <time>");
-                    }
+                    addDeadline(arguments);
                     break;
 
                 case "event":
-                    parts = arguments.split(" from | to ", 2);
-                    if (parts.length == 3) {
-                        addTask(new Event(parts[0], parts[1], parts[2]));
-                    } else {
-                        System.out.println("Invalid event format. Use: event <task> from <time> to <time>");
-                    }
+                    addEvent(arguments);
                     break;
 
                 default:
@@ -94,7 +84,9 @@ public class Emily {
             task.markAsDone();
             System.out.println("Nice! I've marked this task as done: ");
             System.out.println(" " + task);
+            return;
         }
+        System.out.println("This task does not exist! Enter a valid task number.");
     }
 
     public static void unmarkTask(int taskNumber) {
@@ -103,6 +95,34 @@ public class Emily {
             task.unmarkAsDone();
             System.out.println("Ok, I've unmarked this task as not done yet:");
             System.out.println(" " + task);
+            return;
         }
+        System.out.println("This task does not exist! Enter a valid task number.");
+    }
+
+    public static void addTodo(String todo) {
+        if (todo.isBlank()) {
+            System.out.println("Error! Todo description cannot be empty!");
+            return;
+        }
+        addTask(new Todo(todo));
+    }
+
+    public static void addDeadline(String deadline) {
+        String[] parts = deadline.split(" by ", 2);
+        if (parts.length < 2 || parts[0].isBlank() || parts[1].isBlank()) {
+            System.out.println("Invalid deadline format. Use: deadline <task> by <time>");
+            return;
+        }
+        addTask(new Deadline(parts[0], parts[1]));
+    }
+
+    public static void addEvent(String event) {
+        String[] parts = event.split(" from | to ", 3);
+        if (parts.length < 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
+            System.out.println("Invalid event format. Use: event <task> from <time> to <time>");
+            return;
+        }
+        addTask(new Event(parts[0], parts[1], parts[2]));
     }
 }
