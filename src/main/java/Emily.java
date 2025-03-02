@@ -44,6 +44,14 @@ public class Emily {
                     addEvent(arguments);
                     break;
 
+                case "delete":
+                    try {
+                        deleteTask(Integer.parseInt(arguments));
+                    } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                        System.out.println("Error. Invalid task number.");
+                    }
+                    break;
+
                 default:
                     System.out.println("Sorry, I am not sure what that means. Please start with either <todo>, <deadline> or <event>");
                     break;
@@ -65,6 +73,17 @@ public class Emily {
         System.out.println("Got it! I've added this task.");
         System.out.println(" " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+    }
+
+    public static void deleteTask(int taskNumber) {
+        if (taskNumber > 0 && taskNumber <= tasks.size()) {
+            Task task = tasks.remove(taskNumber - 1);
+            System.out.println("Noted! I've deleted this task.");
+            System.out.println(" " + task);
+            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        } else {
+            System.out.println("This task does not exist! Enter a valid task number.");
+        }
     }
 
     public static void printTasks() {
