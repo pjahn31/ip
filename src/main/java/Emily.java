@@ -37,20 +37,20 @@ public class Emily {
                     break;
 
                 case "deadline":
-                    parts = arguments.split(" by ", 2);
-                    if (parts.length == 2) {
-                        addTask(new Deadline(parts[0], parts[1]));
-                    } else {
+                    parts = input.split(" by ", 2);
+                    if (parts.length < 2 || parts[0].isBlank() || parts[1].isBlank()) {
                         System.out.println("Invalid deadline format. Use: deadline <task> by <time>");
+                    } else {
+                        addTask(new Deadline(parts[0], parts[1]));
                     }
                     break;
 
                 case "event":
-                    parts = arguments.split(" from | to ", 2);
-                    if (parts.length == 3) {
-                        addTask(new Event(parts[0], parts[1], parts[2]));
-                    } else {
+                    parts = input.split(" from | to ", 3);
+                    if (parts.length < 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
                         System.out.println("Invalid event format. Use: event <task> from <time> to <time>");
+                    } else {
+                        addTask(new Event(parts[0], parts[1], parts[2]));
                     }
                     break;
 
@@ -94,7 +94,9 @@ public class Emily {
             task.markAsDone();
             System.out.println("Nice! I've marked this task as done: ");
             System.out.println(" " + task);
+            return;
         }
+        System.out.println("This task does not exist! Enter a valid task number.");
     }
 
     public static void unmarkTask(int taskNumber) {
@@ -103,6 +105,8 @@ public class Emily {
             task.unmarkAsDone();
             System.out.println("Ok, I've unmarked this task as not done yet:");
             System.out.println(" " + task);
+            return;
         }
+        System.out.println("This task does not exist! Enter a valid task number.");
     }
 }
