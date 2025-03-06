@@ -25,11 +25,19 @@ public class Emily {
                     break;
 
                 case "mark":
-                    markTask(Integer.parseInt(arguments));
+                    try {
+                        markTask(Integer.parseInt(arguments));
+                    } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                        System.out.println("Error. Invalid task number.");
+                    }
                     break;
 
                 case "unmark":
-                    unmarkTask(Integer.parseInt(arguments));
+                    try {
+                        unmarkTask(Integer.parseInt(arguments));
+                    } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                        System.out.println("Error. Invalid task number.");
+                    }
                     break;
 
                 case "todo":
@@ -45,7 +53,7 @@ public class Emily {
                     break;
 
                 default:
-                    System.out.println("Sorry, I am not sure what that means. Please start with either <todo>, <deadline> or <event>");
+                    System.out.println("Sorry, I am not sure what that means. Try again!");
                     break;
             }
         }
@@ -70,11 +78,11 @@ public class Emily {
     public static void printTasks() {
         if (tasks.isEmpty()) {
             System.out.println("Your tasks list is empty!");
-            return;
-        }
-        System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
+        } else {
+            System.out.println("Here are the tasks in your list:");
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println((i + 1) + "." + tasks.get(i));
+            }
         }
     }
 
@@ -84,9 +92,9 @@ public class Emily {
             task.markAsDone();
             System.out.println("Nice! I've marked this task as done: ");
             System.out.println(" " + task);
-            return;
+        } else {
+            System.out.println("This task does not exist! Enter a valid task number.");
         }
-        System.out.println("This task does not exist! Enter a valid task number.");
     }
 
     public static void unmarkTask(int taskNumber) {
@@ -95,34 +103,35 @@ public class Emily {
             task.unmarkAsDone();
             System.out.println("Ok, I've unmarked this task as not done yet:");
             System.out.println(" " + task);
-            return;
+        } else {
+            System.out.println("This task does not exist! Enter a valid task number.");
         }
-        System.out.println("This task does not exist! Enter a valid task number.");
     }
 
     public static void addTodo(String todo) {
         if (todo.isBlank()) {
             System.out.println("Error! Todo description cannot be empty!");
             return;
+        } else {
+            addTask(new Todo(todo));
         }
-        addTask(new Todo(todo));
     }
 
     public static void addDeadline(String deadline) {
         String[] parts = deadline.split(" by ", 2);
         if (parts.length < 2 || parts[0].isBlank() || parts[1].isBlank()) {
             System.out.println("Invalid deadline format. Use: deadline <task> by <time>");
-            return;
+        } else {
+            addTask(new Deadline(parts[0], parts[1]));
         }
-        addTask(new Deadline(parts[0], parts[1]));
     }
 
     public static void addEvent(String event) {
         String[] parts = event.split(" from | to ", 3);
         if (parts.length < 3 || parts[0].isBlank() || parts[1].isBlank() || parts[2].isBlank()) {
             System.out.println("Invalid event format. Use: event <task> from <time> to <time>");
-            return;
+        } else {
+            addTask(new Event(parts[0], parts[1], parts[2]));
         }
-        addTask(new Event(parts[0], parts[1], parts[2]));
     }
 }
