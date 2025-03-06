@@ -2,62 +2,76 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Emily {
+    public static final Storage storage = new Storage();
     public static final ArrayList<Task> tasks = new ArrayList<>();
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
         greetUser();
+        Scanner sc = new Scanner(System.in);
 
-        while(true) {
+        while (true) {
             String input = sc.nextLine();
 
-            String[] parts = input.split(" ",2);
+            String[] parts = input.split(" ", 2);
             String command = parts[0].toLowerCase();
             String arguments = parts.length > 1 ? parts[1] : "";
 
             switch (command) {
-                case "bye":
-                    exitProgram();
-                    return;
+            case "bye":
+                exitProgram();
+                return;
 
-                case "list":
-                    printTasks();
-                    break;
+            case "list":
+                printTasks();
+                break;
 
-                case "mark":
-                    markTask(Integer.parseInt(arguments));
-                    break;
+            case "mark":
+                markTask(Integer.parseInt(arguments));
+                break;
 
-                case "unmark":
-                    unmarkTask(Integer.parseInt(arguments));
-                    break;
+            case "unmark":
+                unmarkTask(Integer.parseInt(arguments));
+                break;
 
-                case "todo":
-                    addTodo(arguments);
-                    break;
+            case "todo":
+                addTodo(arguments);
+                break;
 
-                case "deadline":
-                    addDeadline(arguments);
-                    break;
+            case "deadline":
+                addDeadline(arguments);
+                break;
 
-                case "event":
-                    addEvent(arguments);
-                    break;
+            case "event":
+                addEvent(arguments);
+                break;
 
-                default:
-                    System.out.println("Sorry, I am not sure what that means. Please start with either <todo>, <deadline> or <event>");
-                    break;
+            default:
+                System.out.println("Sorry, I am not sure what that means. Please start with either <todo>, <deadline> or <event>");
+                break;
             }
         }
     }
 
     public static void greetUser() {
+        if (!Storage.isFileExists()) {
+            Storage.writetoFile(new String[0]);
+        }
+        tasks.addAll(Storage.loadTasksFromStorage());
+
+        if (!tasks.isEmpty()) {
+            System.out.println("[Your list has been updated with " + tasks.size() + " tasks from your storage!]");
+        }
+        System.out.println();
         System.out.println("Hello! I'm Emily.");
         System.out.println("What can I do for you?");
     }
 
     public static void exitProgram() {
         System.out.println("Bye. Hope to see you again soon!");
+    }
+
+    public static void updateStorage() {
+        Storage.writetoFile(tasks.stream().map(Task::toString).toArray(String[]::new));
     }
 
     public static void addTask(Task task) {
@@ -82,6 +96,7 @@ public class Emily {
         if (taskNumber > 0 && taskNumber <= tasks.size()) {
             Task task = tasks.get(taskNumber - 1);
             task.markAsDone();
+            updateStorage();
             System.out.println("Nice! I've marked this task as done: ");
             System.out.println(" " + task);
             return;
@@ -93,6 +108,7 @@ public class Emily {
         if (taskNumber > 0 && taskNumber <= tasks.size()) {
             Task task = tasks.get(taskNumber - 1);
             task.unmarkAsDone();
+            updateStorage();
             System.out.println("Ok, I've unmarked this task as not done yet:");
             System.out.println(" " + task);
             return;
@@ -106,6 +122,7 @@ public class Emily {
             return;
         }
         addTask(new Todo(todo));
+        updateStorage();
     }
 
     public static void addDeadline(String deadline) {
@@ -115,6 +132,7 @@ public class Emily {
             return;
         }
         addTask(new Deadline(parts[0], parts[1]));
+        updateStorage();
     }
 
     public static void addEvent(String event) {
@@ -124,5 +142,6 @@ public class Emily {
             return;
         }
         addTask(new Event(parts[0], parts[1], parts[2]));
+        updateStorage();
     }
 }
