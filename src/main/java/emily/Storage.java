@@ -1,3 +1,10 @@
+package emily;
+
+import emily.task.Task;
+import emily.task.Todo;
+import emily.task.Deadline;
+import emily.task.Event;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
@@ -7,44 +14,54 @@ import java.util.Scanner;
 
 public class Storage {
 
+    private static final String FILE_PATH = "./Emily-storage.txt";
     private static File storageFile;
-    private static final String filePath = "./Emily-storage.txt";
 
     public Storage() {
-        storageFile = new File(filePath);
+        storageFile = new File(FILE_PATH);
+        if (!storageFile.exists()) {
+            try {
+                storageFile.createNewFile();
+            } catch (IOException e) {
+                System.out.println("Error creating storage file: " + e.getMessage());
+            }
+        }
     }
 
     public static boolean isFileExists() {
         return storageFile.exists();
     }
 
-    public static String getAbsolutePath() {
+    public String getAbsolutePath() {
         return storageFile.getAbsolutePath();
     }
 
-    public static void writetoFile(String[] data) {
-        String dataString = "";
-        for (String datum : data) {
-            dataString += datum;
-            dataString += System.lineSeparator();
-        }
-        FileWriter fw = null;
-        try {
-            fw = new FileWriter(filePath);
-            fw.write(dataString);
-            fw.close();
+    public static void writeToFile(TaskList tasks) {
+        try (FileWriter fw = new FileWriter(FILE_PATH)) {
+            for (int i = 0; i < tasks.getSize(); i++) {
+                fw.write(tasks.getTasks(i).toString() + System.lineSeparator());
+            }
         } catch (IOException e) {
-            System.out.println("Error! File might be corrupted!" + e.getMessage());
+            System.out.println("Error writing to file: " + e.getMessage());
         }
     }
 
-    public static String[] readfromFile() {
+    public static void appendToFile(String data) {
+        try (FileWriter fw = new FileWriter(FILE_PATH, true)) { // true enables appending
+            fw.write(data + System.lineSeparator());
+        } catch (IOException e) {
+            System.out.println("Error appending to file: " + e.getMessage());
+        }
+    }
+
+    public static String[] readFromFile() {
         ArrayList<String> output = new ArrayList<>();
-        Scanner sc = null;
-        try {
-            sc = new Scanner(storageFile);
-            while (sc.hasNext()) {
-                output.add(sc.nextLine());
+        try (Scanner sc = new Scanner(storageFile)) {
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine().trim();
+                if (!line.isEmpty()) {
+                    output.add(line);
+                }
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found!");
@@ -55,8 +72,7 @@ public class Storage {
     public static Task parseTaskFromStorage(String line) {
         char taskType = line.charAt(1);
         boolean isDone = (line.charAt(4) == 'X');
-
-        String content = line.substring(7); // Extract description and details
+        String content = line.substring(7);
 
         Task task;
         switch (taskType) {
@@ -95,11 +111,9 @@ public class Storage {
 
     public static ArrayList<Task> loadTasksFromStorage() {
         ArrayList<Task> tasks = new ArrayList<>();
-        String[] data = readfromFile();
-        for (String line : data) {
+        for (String line : readFromFile()) {
             tasks.add(parseTaskFromStorage(line));
         }
         return tasks;
     }
 }
-
