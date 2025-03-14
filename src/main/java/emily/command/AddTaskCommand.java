@@ -9,9 +9,24 @@ import emily.task.Event;
 import emily.Storage;
 import emily.Ui;
 
+/**
+ * Represents a command to add a new task to the task list.
+ * This command handles the creation of three types of tasks: Todo, Deadline, and Event.
+ * It validates the input format and ensures the task is added to the task list and saved to storage.
+ */
 public class AddTaskCommand extends Command {
 
     Ui ui= new Ui();
+
+    /**
+     * Executes the command to add a new task to the task list.
+     * The type of task (Todo, Deadline, or Event) is determined by the input.
+     * The task is added to the task list and saved to storage.
+     *
+     * @param tasks The task list to which the new task will be added.
+     * @param input The user input containing the task details.
+     * @throws EmilyException If the input format is invalid or the task description is empty.
+     */
     @Override
     public void setCommand(TaskList tasks, String input) throws EmilyException {
         String[] parts = input.trim().split(" ");

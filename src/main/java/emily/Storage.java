@@ -12,11 +12,20 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles reading from and writing to the storage file.
+ * This class is responsible for loading tasks from the file when the program starts
+ * and saving tasks to the file when the program ends or tasks are modified.
+ */
 public class Storage {
 
     private static final String FILE_PATH = "./Emily-storage.txt";
     private static File storageFile;
 
+    /**
+     * Constructs a Storage object and initializes the storage file.
+     * If the file does not exist, it creates a new file.
+     */
     public Storage() {
         storageFile = new File(FILE_PATH);
         if (!storageFile.exists()) {
@@ -28,14 +37,29 @@ public class Storage {
         }
     }
 
+    /**
+     * Checks if the storage file exists.
+     *
+     * @return True if the file exists, false otherwise.
+     */
     public static boolean isFileExists() {
         return storageFile.exists();
     }
 
+    /**
+     * Returns the absolute path of the storage file.
+     *
+     * @return The absolute path of the file as a String.
+     */
     public String getAbsolutePath() {
         return storageFile.getAbsolutePath();
     }
 
+    /**
+     * Writes all tasks from the TaskList to the storage file.
+     *
+     * @param tasks The TaskList containing the tasks to be written to the file.
+     */
     public static void writeToFile(TaskList tasks) {
         try (FileWriter fw = new FileWriter(FILE_PATH)) {
             for (int i = 0; i < tasks.getSize(); i++) {
@@ -46,6 +70,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Appends a single line of data to the storage file.
+     *
+     * @param data The data to be appended to the file.
+     */
     public static void appendToFile(String data) {
         try (FileWriter fw = new FileWriter(FILE_PATH, true)) { // true enables appending
             fw.write(data + System.lineSeparator());
@@ -54,6 +83,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Reads all lines from the storage file and returns them as an array of strings.
+     *
+     * @return An array of strings, where each string represents a line from the file.
+     */
     public static String[] readFromFile() {
         ArrayList<String> output = new ArrayList<>();
         try (Scanner sc = new Scanner(storageFile)) {
@@ -69,6 +103,12 @@ public class Storage {
         return output.toArray(new String[0]);
     }
 
+    /**
+     * Parses a line from the storage file into a Task object.
+     *
+     * @param line The line from the storage file to be parsed.
+     * @return The Task object created from the line.
+     */
     public static Task parseTaskFromStorage(String line) {
         char taskType = line.charAt(1);
         boolean isDone = (line.charAt(4) == 'X');
@@ -109,6 +149,11 @@ public class Storage {
         return task;
     }
 
+    /**
+     * Loads all tasks from the storage file into an ArrayList.
+     *
+     * @return An ArrayList containing all tasks loaded from the file.
+     */
     public static ArrayList<Task> loadTasksFromStorage() {
         ArrayList<Task> tasks = new ArrayList<>();
         for (String line : readFromFile()) {

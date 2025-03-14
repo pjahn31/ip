@@ -2,9 +2,19 @@ package emily;
 
 import emily.exception.EmilyException;
 
+/**
+ * The main class for the Emily task management application
+ * It initialises the task list, loads stored tasks and handles user input
+ */
 public class Emily {
     private final static TaskList tasks = new TaskList();
 
+    /**
+     * The entry point of the application
+     * Initialises ui and storage, loads task and enters the main loop to process user commands
+     *
+     * @param args Command line arguments (not used)
+     */
     public static void main(String[] args) {
         Ui ui = new Ui();
 
