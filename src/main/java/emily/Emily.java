@@ -11,7 +11,7 @@ public class Emily {
 
     /**
      * The entry point of the application
-     * Initialises ui and storage, loads task and enters the main loop to process user commands
+     * Initialises Ui and Storage, loads task and enters the main loop to process user commands
      *
      * @param args Command line arguments (not used)
      */
