@@ -9,8 +9,8 @@ Adds a task to the task manager. Tasks can be one of the three types: Todo, Dead
 Upon adding the task, the number of tasks in the current list will also be shown. <br/>
 The type of task is indicated by a 'T' for todo, a 'D' for deadline and an 'E' for event. <br/>
 - Add Todo: eg. `todo homework`, output `[T][ ] homework` <br/>
-- Add Deadline: eg. `deadline assignment by thursday`, output `[D][ ] assignment (by: thursday) <br/>
-- Add Event: eg. `event birthday party from 4pm to 7pm`, output `[E][ ] birthday party (from: 4pm to: 6pm)
+- Add Deadline: eg. `deadline assignment by thursday`, output `[D][ ] assignment (by: thursday)` <br/>
+- Add Event: eg. `event birthday party from 4pm to 7pm`, output `[E][ ] birthday party (from: 4pm to: 6pm)`
 
 ### Listing all tasks: `list`
 Displays all the tasks in the task list. This list is managed by Emily. <br/>
