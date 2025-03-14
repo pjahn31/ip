@@ -29,7 +29,7 @@ public class DeleteCommand extends Command {
             tasks.deleteTask(index);
             Storage.writeToFile(tasks);
 
-            ui.printMessage("Now you have " + tasks.getSize() + " tasks in the list.");
+            ui.printMessage("Now you have " + tasks.getSize() + " tasks in the list. To check your updated list, type <list> next.");
         } catch (NumberFormatException e) {
             throw new EmilyException("Invalid task number. Please enter a valid number.");
         }
