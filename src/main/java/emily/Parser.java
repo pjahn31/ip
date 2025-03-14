@@ -4,7 +4,6 @@ import emily.command.PrintCommand;
 import emily.command.AddTaskCommand;
 import emily.command.MarkCommand;
 import emily.command.DeleteCommand;
-import emily.command.FindCommand;
 import emily.exception.EmilyException;
 
 
@@ -32,9 +31,6 @@ public class Parser {
                 return true;
             case "delete":
                 new DeleteCommand().setCommand(tasks, input);
-                return true;
-            case "find":
-                new FindCommand().setCommand(tasks, input);
                 return true;
             default:
                 throw new EmilyException("Sorry, I am not sure what that means. Try again!");
